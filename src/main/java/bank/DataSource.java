@@ -67,8 +67,7 @@ public class DataSource {
 
   public static void main(String[] args) {
     Customer customer = getCustomer("lfromonte9@de.vu");
-    System.out.println(customer.getName());
-    Account account = geAccount(11963);
+    Account account = geAccount(customer.getAccountId());
     System.out.println(account.getBalance());
   }
 
