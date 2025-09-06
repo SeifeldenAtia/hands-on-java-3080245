@@ -28,13 +28,15 @@ public class DataSource {
     try (Connection connection = connect(); PreparedStatement statement = connection.prepareStatement(query)) {
 
       statement.setString(1, username);
-      ResultSet resultSet = statement.executeQuery();
-      customer = new Customer(
-          resultSet.getInt("ID"),
-          resultSet.getString("NAME"),
-          resultSet.getString("USERNAME"),
-          resultSet.getString("PASSWORD"),
-          resultSet.getInt("ACCOUNT_ID"));
+      try (ResultSet resultSet = statement.executeQuery();) {
+        customer = new Customer(
+            resultSet.getInt("ID"),
+            resultSet.getString("NAME"),
+            resultSet.getString("USERNAME"),
+            resultSet.getString("PASSWORD"),
+            resultSet.getInt("ACCOUNT_ID"));
+      }
+
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -42,9 +44,32 @@ public class DataSource {
     return customer;
   }
 
+  public static Account geAccount(int id) {
+    String query = "SELECT * FROM Accounts where id = ?";
+    Account account = null;
+    try (Connection connection = connect(); PreparedStatement statement = connection.prepareStatement(query)) {
+
+      statement.setInt(1, id);
+      try (ResultSet resultSet = statement.executeQuery();) {
+        account = new Account(
+            id,
+            resultSet.getString("TYPE"),
+            resultSet.getDouble("BALANCE"));
+      }
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return account;
+
+  }
+
   public static void main(String[] args) {
     Customer customer = getCustomer("lfromonte9@de.vu");
     System.out.println(customer.getName());
+    Account account = geAccount(11963);
+    System.out.println(account.getBalance());
   }
 
 }
