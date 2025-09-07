@@ -70,7 +70,12 @@ public class Menu {
         case 2:
           System.out.println("How much would you to withdraw? ");
           amount = scanner.nextDouble();
-          account.withdraw(amount);
+          try {
+            account.withdraw(amount);
+          } catch (AmountException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Please try again!");
+          }
           break;
         case 3:
           System.out.println("Current Balance: " + account.getBalance());
