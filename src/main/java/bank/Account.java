@@ -1,5 +1,7 @@
 package bank;
 
+import bank.exceptions.AmountException;
+
 public class Account {
 
   private int id;
@@ -36,8 +38,14 @@ public class Account {
     this.balance = balance;
   }
 
-  public void deposit(double amount) {
-
+  public void deposit(double amount) throws AmountException {
+    if (amount < 1) {
+      throw new AmountException("The minimum is 1 ");
+    } else {
+      double newBalance = amount + balance;
+      setBalance(newBalance);
+      DataSource.updateBalance(id,  newBalance);
+    }
   }
 
   public void withdraw(double amount) {

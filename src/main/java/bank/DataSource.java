@@ -65,10 +65,19 @@ public class DataSource {
 
   }
 
-  public static void main(String[] args) {
-    Customer customer = getCustomer("lfromonte9@de.vu");
-    Account account = geAccount(customer.getAccountId());
-    System.out.println(account.getBalance());
+  public static void updateBalance(int id, double newBalance) {
+    String query = "UPDATE Accounts SET BALANCE = ? WHERE ID = ?";
+
+    try (Connection connection = connect();
+        PreparedStatement statement = connection.prepareStatement(query)) {
+
+      statement.setDouble(1, newBalance);
+      statement.setInt(2, id);
+      statement.executeUpdate();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
 }
